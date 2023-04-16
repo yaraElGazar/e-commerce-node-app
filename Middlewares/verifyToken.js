@@ -27,7 +27,7 @@ const verifyToken = (req, res, next) => {
 const verifyTokenAndAuthorization = (req, res, next) => {
   //^ verify the token
   verifyToken(req, res, () => {
-    //^ the user wants to update his/her info or the admon wants to update the user's info
+    //^ the user wants to update his/her info or the admin wants to update the user's info
     if (req.user.id === req.params.id || req.user.isAdmin) {
       //^ continue the root function
       next();
@@ -37,4 +37,22 @@ const verifyTokenAndAuthorization = (req, res, next) => {
   });
 };
 
-module.exports = { verifyToken, verifyTokenAndAuthorization };
+//& Verify token and admin function
+const verifyTokenAndAdmin = (req, res, next) => {
+  //^ verify the token
+  verifyToken(req, res, () => {
+    //^ check if the user is admin
+    if (req.user.isAdmin) {
+      //^ continue the root function
+      next();
+    } else {
+      res.status(403).json("You are not allowed to do that!");
+    }
+  });
+};
+
+module.exports = {
+  verifyToken,
+  verifyTokenAndAuthorization,
+  verifyTokenAndAdmin,
+};
